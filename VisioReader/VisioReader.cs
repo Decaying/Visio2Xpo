@@ -9,19 +9,21 @@ namespace cvo.buyshans.Visio2Xpo.Communication
 {
     public class VisioReader : IVisioReader
     {
-        private readonly String _FileName;
+        private const string XmlBaseUrl = "http://schemas.microsoft.com/visio/2010/relationships/";
+        private const string XmlDocument = XmlBaseUrl + "document";
+        private const string XmlPages = XmlBaseUrl + "pages";
+        private const string XmlPage = XmlBaseUrl + "page";
         private readonly FileMode _FileMode;
+        private readonly String _FileName;
         private IEnumerable<XElement> _Shapes;
-        private const string ShapeNameField = "Attribute";
-        private const string ShapeNamePrimaryKeyAttribute = "Primary Key Attribute";
-        private const string ShapeNameEntity = "Entity";
 
-        public IEnumerable<XElement> Shapes {
+        public IEnumerable<XElement> Shapes
+        {
             get
             {
                 if (_Shapes != null) return _Shapes;
 
-                var elements = GetPageXml().Descendants().Where(e => e.Name.LocalName == "Shape");
+                IEnumerable<XElement> elements = GetPageXml().Descendants().Where(e => e.Name.LocalName == "Shape");
                 _Shapes = elements.DefaultIfEmpty(null);
                 return _Shapes;
             }
@@ -30,51 +32,53 @@ namespace cvo.buyshans.Visio2Xpo.Communication
 
         private static PackagePart GetDocument(Package package)
         {
-            var packageRel = package.GetRelationshipsByType("http://schemas.microsoft.com/visio/2010/relationships/document").FirstOrDefault();
+            PackageRelationship packageRel = package.GetRelationshipsByType(XmlDocument).FirstOrDefault();
             if (packageRel == null) return null;
 
-            var docUri = PackUriHelper.ResolvePartUri(new Uri("/", UriKind.Relative), packageRel.TargetUri);
+            Uri docUri = PackUriHelper.ResolvePartUri(new Uri("/", UriKind.Relative), packageRel.TargetUri);
 
             return package.GetPart(docUri);
         }
 
         private static PackagePart GetPages(PackagePart document)
         {
-            return GetPackagePart(document, "http://schemas.microsoft.com/visio/2010/relationships/pages");
+            return GetPackagePart(document, XmlPages);
         }
 
         private static PackagePart GetPage(PackagePart pages)
         {
-            return GetPackagePart(pages, "http://schemas.microsoft.com/visio/2010/relationships/page");
+            return GetPackagePart(pages, XmlPage);
         }
 
         private static PackagePart GetPackagePart(PackagePart packagePart, String relation)
         {
-            var packageRel = packagePart.GetRelationshipsByType(relation).FirstOrDefault();
+            PackageRelationship packageRel = packagePart.GetRelationshipsByType(relation).FirstOrDefault();
             if (packageRel == null) return null;
 
-            var partUri = PackUriHelper.ResolvePartUri(
+            Uri partUri = PackUriHelper.ResolvePartUri(
                 packagePart.Uri, packageRel.TargetUri);
             return packagePart.Package.GetPart(partUri);
         }
 
         private static XDocument GetXmlFromPage(PackagePart page)
         {
-            var partStream = page.GetStream();
+            Stream partStream = page.GetStream();
             return XDocument.Load(partStream);
         }
+
         private XDocument GetPageXml()
         {
-            using (var package = Package.Open(_FileName, _FileMode))
+            using (Package package = Package.Open(_FileName, _FileMode))
             {
-                var doc = GetDocument(package);
-                var pages = GetPages(doc);
-                var page = GetPage(pages);
+                PackagePart doc = GetDocument(package);
+                PackagePart pages = GetPages(doc);
+                PackagePart page = GetPage(pages);
                 return GetXmlFromPage(page);
             }
         }
 
         #region Constructors
+
         public VisioReader(string fileName, FileMode fileMode = FileMode.Open)
         {
             _FileName = fileName;
@@ -84,29 +88,20 @@ namespace cvo.buyshans.Visio2Xpo.Communication
         #endregion Constructors
 
         #region IVisioReader
-        public IEnumerable<XElement> GetEntities()
-        {
-            return Shapes.Where(e => e.Attributes().ToList().Any(a => a.Name == "Name" && a.Value == ShapeNameEntity));
-        }
 
-        public IEnumerable<XElement> GetPrimaryKeys()
+        public IEnumerable<XElement> GetElementsByName(String shapeName)
         {
-            return Shapes.Where(e =>
-                e.Attributes().ToList().Any(a => a.Name == "Name" && a.Value == ShapeNamePrimaryKeyAttribute)
-                );
-        }
-
-        public IEnumerable<XElement> GetFields()
-        {
-            return Shapes.Where(e =>
-                e.Attributes().ToList().Any(a => a.Name == "Name" && a.Value == ShapeNameField)
-                );
+            return Shapes.Where(e => e.Attributes().ToList().Any(a => a.Name == "Name" && a.Value == shapeName));
         }
 
         #endregion IVisioReader
 
+        #region IDisposable
+
         public void Dispose()
         {
         }
+
+        #endregion IDisposable
     }
 }

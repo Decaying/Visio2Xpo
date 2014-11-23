@@ -6,8 +6,6 @@ namespace cvo.buyshans.Visio2Xpo.Communication
 {
     public interface IVisioReader : IDisposable
     {
-        IEnumerable<XElement> GetEntities();
-        IEnumerable<XElement> GetPrimaryKeys();
-        IEnumerable<XElement> GetFields();
+        IEnumerable<XElement> GetElementsByName(String shapeName);
     }
 }

@@ -40,7 +40,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataFactory.cs" />
+    <Compile Include="IVisioDataFactory.cs" />
+    <Compile Include="VisioDataFactory.cs" />
     <Compile Include="IVisioReader.cs" />
     <Compile Include="VisioReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
