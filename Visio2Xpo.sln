@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisioReaderTest", "VisioRea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{A8C89042-76CC-4A25-931E-150B7832218E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestProjects", "TestProjects", "{3399AFEF-7DAC-49E7-B124-EB2B8355F58A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicIO", "BasicIO\BasicIO.csproj", "{F4BB82A4-098E-4997-B9E0-73F2C9F0F9FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,8 +37,15 @@ Global
 		{A8C89042-76CC-4A25-931E-150B7832218E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8C89042-76CC-4A25-931E-150B7832218E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8C89042-76CC-4A25-931E-150B7832218E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4BB82A4-098E-4997-B9E0-73F2C9F0F9FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4BB82A4-098E-4997-B9E0-73F2C9F0F9FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4BB82A4-098E-4997-B9E0-73F2C9F0F9FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4BB82A4-098E-4997-B9E0-73F2C9F0F9FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F4BB82A4-098E-4997-B9E0-73F2C9F0F9FC} = {3399AFEF-7DAC-49E7-B124-EB2B8355F58A}
 	EndGlobalSection
 EndGlobal
