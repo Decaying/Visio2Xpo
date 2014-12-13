@@ -42,9 +42,19 @@
   <ItemGroup>
     <Compile Include="DynamicsAX\XpoFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Visio\IVisioDataFactory.cs" />
+    <Compile Include="Visio\Factories\FieldFactory.cs" />
+    <Compile Include="Visio\Factories\IFactory.cs" />
+    <Compile Include="Visio\Factories\PrimaryKeyFactory.cs" />
+    <Compile Include="Visio\Factories\TableFactory.cs" />
+    <Compile Include="Visio\Factories\SchemaFactory.cs" />
     <Compile Include="Visio\IVisioReader.cs" />
-    <Compile Include="Visio\VisioDataFactory.cs" />
+    <Compile Include="Visio\Validators\FieldValidator.cs" />
+    <Compile Include="Visio\Validators\NameValidator.cs" />
+    <Compile Include="Visio\Validators\PrimaryKeyValidator.cs" />
+    <Compile Include="Visio\Validators\SchemaValidator.cs" />
+    <Compile Include="Visio\Validators\TableValidator.cs" />
+    <Compile Include="Visio\Validators\IValidator.cs" />
+    <Compile Include="Visio\Validators\ValidatorUtils.cs" />
     <Compile Include="Visio\VisioReader.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +63,7 @@
       <Name>Data</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

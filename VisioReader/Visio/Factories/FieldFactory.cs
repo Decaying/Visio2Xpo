@@ -1,0 +1,47 @@
+﻿using System.Xml.Linq;
+using cvo.buyshans.Visio2Xpo.Communication.Visio.Validators;
+using cvo.buyshans.Visio2Xpo.Data;
+
+namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Factories
+{
+    public class FieldFactory : IFactory<Field>
+    {
+        private const string ShapeNameAttribute = "Attribute";
+
+        private readonly IVisioReader _VisioReader;
+        private readonly IValidator<Field> _Validator;
+
+        public FieldFactory(IVisioReader visioReader, IValidator<Field> validator)
+        {
+            _VisioReader = visioReader;
+            _Validator = validator;
+        }
+
+        public IValidator<Field> Validator
+        {
+            get
+            {
+                return _Validator;
+            }
+        }
+
+        public int MasterId
+        {
+            get
+            {
+                return _VisioReader.GetMasterId(ShapeNameAttribute);
+            }
+        }
+
+        public Field Create(XElement element)
+        {
+            var field = new Field
+            {
+                Name = _VisioReader.GetName(element),
+                BaseType = "String" //todo: base type in Visio
+            };
+
+            return Validator.Validate(field) ? field : null;
+        }
+    }
+}
