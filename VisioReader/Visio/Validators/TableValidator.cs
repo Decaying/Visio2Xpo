@@ -5,29 +5,29 @@ using cvo.buyshans.Visio2Xpo.Data;
 
 namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Validators
 {
-    public class PrimaryKeyValidator : IValidator<PrimaryKey>
+    public class TableValidator : IValidator<Table>
     {
-        private readonly IValidator<String> _PrimaryKeyNameValidator;
+        private readonly IValidator<String> _TableNameValidator;
         private readonly IList<String> _ValidationErrors;
 
-        public PrimaryKeyValidator()
+        public TableValidator()
         {
             _ValidationErrors = new List<String>();
-            _PrimaryKeyNameValidator = new NameValidator("Primary key");
+            _TableNameValidator = new NameValidator("Table");
         }
 
-        public Boolean Validate(PrimaryKey validate)
+        public Boolean Validate(Table validate)
         {
             if (validate == null) throw new ArgumentNullException("validate");
 
-            return _PrimaryKeyNameValidator.Validate(validate.Name);
+            return _TableNameValidator.Validate(validate.Name);
         }
 
         public IEnumerable<String> ValidationErrors
         {
             get
             {
-                return _ValidationErrors.Union(_PrimaryKeyNameValidator.ValidationErrors);
+                return _ValidationErrors.Union(_TableNameValidator.ValidationErrors);
             }
         }
     }

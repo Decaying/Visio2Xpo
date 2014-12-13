@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using cvo.buyshans.Visio2Xpo.Data;
 
 namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Validators
 {
     public class SchemaValidator : IValidator<Schema>
     {
-        private readonly IList<string> _ValidationErrors;
+        private readonly IList<String> _ValidationErrors;
+        private readonly IValidator<Table> _TableValidator; 
 
-        public SchemaValidator()
+        public SchemaValidator(IValidator<Table> tableValidator)
         {
-            _ValidationErrors = new List<string>();
+            _ValidationErrors = new List<String>();
+            _TableValidator = tableValidator;
         }
 
         public bool Validate(Schema validate)
@@ -20,9 +23,12 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Validators
             return true;
         }
 
-        public IEnumerable<string> ValidationErrors()
+        public IEnumerable<String> ValidationErrors
         {
-            return _ValidationErrors;
+            get
+            {
+                return _ValidationErrors.Union(_TableValidator.ValidationErrors);
+            }
         }
     }
 }

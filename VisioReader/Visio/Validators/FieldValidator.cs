@@ -23,9 +23,12 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Validators
             return _FieldNameValidator.Validate(validate.Name);
         }
 
-        public IEnumerable<String> ValidationErrors()
+        public IEnumerable<String> ValidationErrors
         {
-            return _ValidationErrors.Union(_FieldNameValidator.ValidationErrors());
+            get
+            {
+                return _ValidationErrors.Union(_FieldNameValidator.ValidationErrors);
+            }
         }
     }
 }
