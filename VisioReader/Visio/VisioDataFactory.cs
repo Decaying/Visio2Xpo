@@ -31,7 +31,8 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
         {
             return new Field
             {
-                Name = _VisioReader.GetName(element)
+                Name = _VisioReader.GetName(element),
+                BaseType = "String" //todo: base type in Visio
             };
         }
 
