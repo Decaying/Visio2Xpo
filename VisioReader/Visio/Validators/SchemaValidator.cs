@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using cvo.buyshans.Visio2Xpo.Data;
 
 namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Validators
@@ -14,6 +15,8 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Validators
 
         public bool Validate(Schema validate)
         {
+            if (validate == null) throw new ArgumentNullException("validate");
+
             return true;
         }
 

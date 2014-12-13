@@ -7,8 +7,8 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Validators
 {
     public class PrimaryKeyValidator : IValidator<PrimaryKey>
     {
-        private readonly IList<string> _ValidationErrors;
-        private readonly IValidator<String> _PrimaryKeyNameValidator; 
+        private readonly IValidator<String> _PrimaryKeyNameValidator;
+        private readonly IList<String> _ValidationErrors;
 
         public PrimaryKeyValidator()
         {
@@ -18,6 +18,8 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Validators
 
         public Boolean Validate(PrimaryKey validate)
         {
+            if (validate == null) throw new ArgumentNullException("validate");
+
             return _PrimaryKeyNameValidator.Validate(validate.Name);
         }
 

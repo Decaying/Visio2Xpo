@@ -14,6 +14,9 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Factories
 
         public PrimaryKeyFactory(IVisioReader visioReader, IValidator<PrimaryKey> validator)
         {
+            if (visioReader == null) throw new ArgumentNullException("visioReader");
+            if (validator == null) throw new ArgumentNullException("validator");
+
             _VisioReader = visioReader;
             _Validator = validator;
         }
@@ -31,7 +34,7 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Factories
             }
         }
 
-        public PrimaryKey Create(XElement element)
+        public PrimaryKey Create(XElement element = null)
         {
             var primaryKey = new PrimaryKey
             {

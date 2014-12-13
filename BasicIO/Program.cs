@@ -2,17 +2,18 @@
 using cvo.buyshans.Visio2Xpo.Communication.DynamicsAX;
 using cvo.buyshans.Visio2Xpo.Communication.Visio;
 using cvo.buyshans.Visio2Xpo.Communication.Visio.Factories;
+using cvo.buyshans.Visio2Xpo.Data;
 
 namespace BasicIO
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            using (var visioReader = new VisioReader("Drawing1.vsdx"))
+            using (IVisioReader visioReader = new VisioReader("Drawing1.vsdx"))
             {
-                var visioDataFactory = new SchemaFactory(visioReader);
-                var schema = visioDataFactory.ReadSchema();
+                IFactory<Schema> visioDataFactory = new SchemaFactory(visioReader);
+                var schema = visioDataFactory.Create();
 
                 using (var writer = new FileStream("output.xpo", FileMode.Create))
                 {

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace cvo.buyshans.Visio2Xpo.Data
 {
@@ -11,6 +8,6 @@ namespace cvo.buyshans.Visio2Xpo.Data
     {
         public String Name { get; set; }
 
-        public IEnumerable<Table> Tables { get; set; } 
+        public IEnumerable<Table> Tables { get; set; }
     }
 }

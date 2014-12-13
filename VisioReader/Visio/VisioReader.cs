@@ -17,8 +17,10 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
         private const string XmlPage = XmlBaseUrl + "page";
         private const string XmlMasters = XmlBaseUrl + "masters";
         private const string XmlVisioCore = "http://schemas.microsoft.com/office/visio/2012/main";
+
         private readonly FileMode _FileMode;
         private readonly String _FileName;
+
         private IEnumerable<XElement> _Shapes;
         private IEnumerable<XElement> _Masters;
 
@@ -52,7 +54,7 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
 
         private XDocument GetMastersXml()
         {
-            using (Package package = Package.Open(_FileName, _FileMode))
+            using (var package = Package.Open(_FileName, _FileMode))
             {
                 var doc = GetDocument(package);
                 var masters = GetMasters(doc);
@@ -68,10 +70,12 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
 
         private static PackagePart GetDocument(Package package)
         {
-            PackageRelationship packageRel = package.GetRelationshipsByType(XmlDocument).FirstOrDefault();
+            if (package == null) throw new ArgumentNullException("package");
+
+            var packageRel = package.GetRelationshipsByType(XmlDocument).FirstOrDefault();
             if (packageRel == null) return null;
 
-            Uri docUri = PackUriHelper.ResolvePartUri(new Uri("/", UriKind.Relative), packageRel.TargetUri);
+            var docUri = PackUriHelper.ResolvePartUri(new Uri("/", UriKind.Relative), packageRel.TargetUri);
 
             return package.GetPart(docUri);
         }
@@ -88,34 +92,38 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
 
         private static PackagePart GetPackagePart(PackagePart packagePart, String relation)
         {
-            PackageRelationship packageRel = packagePart.GetRelationshipsByType(relation).FirstOrDefault();
+            if (packagePart == null) throw new ArgumentNullException("packagePart");
+
+            var packageRel = packagePart.GetRelationshipsByType(relation).FirstOrDefault();
             if (packageRel == null) return null;
 
-            Uri partUri = PackUriHelper.ResolvePartUri(
+            var partUri = PackUriHelper.ResolvePartUri(
                 packagePart.Uri, packageRel.TargetUri);
             return packagePart.Package.GetPart(partUri);
         }
 
         private static XDocument GetXmlFromPackagePart(PackagePart page)
         {
-            Stream partStream = page.GetStream();
+            if (page == null) throw new ArgumentNullException("page");
+
+            var partStream = page.GetStream();
             return XDocument.Load(partStream);
         }
 
         private XDocument GetPageXml()
         {
-            using (Package package = Package.Open(_FileName, _FileMode))
+            using (var package = Package.Open(_FileName, _FileMode))
             {
-                PackagePart doc = GetDocument(package);
-                PackagePart pages = GetPages(doc);
-                PackagePart page = GetPage(pages);
+                var doc = GetDocument(package);
+                var pages = GetPages(doc);
+                var page = GetPage(pages);
                 return GetXmlFromPackagePart(page);
             }
         }
 
         private IEnumerable<Int32> GetIDsFromRelationshipsFormula(String formula)
         {
-            const string pattern = "Sheet.(\\d{1,})";
+            const String pattern = "Sheet.(\\d{1,})";
             var results = Regex.Matches(formula, pattern);
 
             return results
@@ -127,17 +135,17 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
         }
         
         #region Constructors
-
-        public VisioReader(string fileName, FileMode fileMode = FileMode.Open)
+        public VisioReader(String fileName, FileMode fileMode = FileMode.Open)
         {
+            if (fileName == null) throw new ArgumentNullException("fileName");
+            if (!File.Exists(fileName)) throw new FileNotFoundException(String.Format("File {0} does not exist", fileName), fileName);
+
             _FileName = fileName;
             _FileMode = fileMode;
         }
-
         #endregion Constructors
 
         #region IVisioReader
-        
         public IEnumerable<XElement> GetElements(Int32 masterId)
         {
             return Shapes.Where(e => 
@@ -148,6 +156,8 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
 
         public IEnumerable<Int32> GetRelatedElementIDs(XElement element)
         {
+            if (element == null) throw new ArgumentNullException("element");
+
             var textXCell = XName.Get("Cell", XmlVisioCore);
 
             var relatedElementIDs = new List<Int32>();
@@ -164,6 +174,8 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
 
         public String GetName(XElement element)
         {
+            if (element == null) throw new ArgumentNullException("element");
+
             var textXName = XName.Get("Text", XmlVisioCore);
             var elementName = element.Elements(textXName).SingleOrDefault();
 
@@ -186,17 +198,17 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
 
         public int GetMasterId(XElement element)
         {
+            if (element == null) throw new ArgumentNullException("element");
+
             return Convert.ToInt32(element.Attribute("Master").Value);
         }
 
         #endregion IVisioReader
 
         #region IDisposable
-
         public void Dispose()
         {
         }
-
         #endregion IDisposable
     }
 }

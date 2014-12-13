@@ -8,6 +8,6 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Factories
     {
         IValidator<T> Validator { get; }
         Int32 MasterId { get; }
-        T Create(XElement element);
+        T Create(XElement element = null);
     }
 }

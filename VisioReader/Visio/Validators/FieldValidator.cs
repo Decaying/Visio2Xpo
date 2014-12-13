@@ -7,8 +7,8 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Validators
 {
     public class FieldValidator : IValidator<Field>
     {
-        private readonly IList<string> _ValidationErrors;
-        private readonly IValidator<String> _FieldNameValidator; 
+        private readonly IValidator<String> _FieldNameValidator;
+        private readonly IList<String> _ValidationErrors;
 
         public FieldValidator()
         {
@@ -18,6 +18,8 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Validators
 
         public Boolean Validate(Field validate)
         {
+            if (validate == null) throw new ArgumentNullException("validate");
+
             return _FieldNameValidator.Validate(validate.Name);
         }
 

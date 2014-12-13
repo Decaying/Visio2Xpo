@@ -97,7 +97,6 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         #endregion "HasElements"
 
         #region "HasNoElements"
-
         [TestMethod]
         public void Drawing1HasNoAttributes()
         {
@@ -126,7 +125,6 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         #endregion "HasNoElements"
 
         #region "Element Name"
-
         [TestMethod]
         public void Drawing1HasPrimaryKeyName()
         {
@@ -171,11 +169,9 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
                 Assert.AreEqual(expected, actual);
             }
         }
-
         #endregion "Element Name"
 
         #region "Child Elements"
-
         [TestMethod]
         public void Drawing4Has2Entities()
         {
@@ -248,6 +244,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
                 Assert.AreEqual(expected3, actual3);
             }
         }
+
         [TestMethod]
         public void Drawing4Entity2Has4NamedChildShapes()
         {

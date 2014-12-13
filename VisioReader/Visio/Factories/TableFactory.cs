@@ -19,6 +19,9 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Factories
 
         public TableFactory(IVisioReader visioReader, IValidator<Table> validator)
         {
+            if (visioReader == null) throw new ArgumentNullException("visioReader");
+            if (validator == null) throw new ArgumentNullException("validator");
+
             _VisioReader = visioReader;
             _Validator = validator;
 
@@ -39,8 +42,10 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Factories
             }
         }
 
-        public Table Create(XElement element)
+        public Table Create(XElement element = null)
         {
+            if (element == null) throw new ArgumentNullException("element");
+
             var tableName = _VisioReader.GetName(element);
             
             var table = new Table
@@ -66,7 +71,7 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Factories
                 {
                     if (primaryKey == null)
                     {
-                        primaryKey = _PrimaryKeyFactory.Create(child);
+                        primaryKey = _PrimaryKeyFactory.Create();
                     }
 
                     primaryKeyFields.Add(_FieldFactory.Create(child));

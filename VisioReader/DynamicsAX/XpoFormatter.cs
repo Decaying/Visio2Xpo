@@ -16,6 +16,10 @@ namespace cvo.buyshans.Visio2Xpo.Communication.DynamicsAX
 
         public void Serialize(Stream serializationStream, object graph)
         {
+            if (serializationStream == null) throw new ArgumentNullException("serializationStream");
+            if (graph == null) throw new ArgumentNullException("graph");
+            if (!serializationStream.CanWrite) throw new ArgumentException("Stream is not writable");
+
             var members = FormatterServices.GetSerializableMembers(graph.GetType(), Context);
 
             // Get fields data.
@@ -30,10 +34,16 @@ namespace cvo.buyshans.Visio2Xpo.Communication.DynamicsAX
                 objs.OfType<IEnumerable<Table>>().ToList().ForEach(o => SerializeTables(sw, o));
 
                 sw.WriteLine("***Element: END");
+                sw.Flush();
+                sw.Close();
             }
         }
 
-        private void SerializeTables(StreamWriter sw, IEnumerable<Table> tables)
+        public ISurrogateSelector SurrogateSelector { get; set; }
+        public SerializationBinder Binder { get; set; }
+        public StreamingContext Context { get; set; }
+
+        private static void SerializeTables(TextWriter sw, IEnumerable<Table> tables)
         {
             tables.ToList().ForEach(t =>
             {
@@ -83,10 +93,10 @@ namespace cvo.buyshans.Visio2Xpo.Communication.DynamicsAX
             });
         }
 
-        private void SerializeFields(StreamWriter sw, IEnumerable<Field> fields)
+        private static void SerializeFields(TextWriter sw, IEnumerable<Field> fields)
         {
             if (fields == null) return;
-            
+
             fields.ToList().ForEach(f =>
             {
                 sw.WriteLine("      FIELD #{0}", f.Name);
@@ -100,7 +110,7 @@ namespace cvo.buyshans.Visio2Xpo.Communication.DynamicsAX
             });
         }
 
-        private void SerializePrimaryKeyIndex(StreamWriter sw, PrimaryKey primaryKey)
+        private static void SerializePrimaryKeyIndex(TextWriter sw, PrimaryKey primaryKey)
         {
             sw.WriteLine("      #{0}", primaryKey.Name);
             sw.WriteLine("      PROPERTIES");
@@ -112,12 +122,8 @@ namespace cvo.buyshans.Visio2Xpo.Communication.DynamicsAX
             sw.WriteLine("      INDEXFIELDS");
             primaryKey.Fields.ToList().ForEach(f =>
                 sw.WriteLine("        #{0}", f.Name)
-            );
+                );
             sw.WriteLine("      ENDINDEXFIELDS");
         }
-
-        public ISurrogateSelector SurrogateSelector { get; set; }
-        public SerializationBinder Binder { get; set; }
-        public StreamingContext Context { get; set; }
     }
 }
