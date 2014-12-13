@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "Visio2Xpo\UI.csproj",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Communication", "VisioReader\Communication.csproj", "{74B1B93B-AF25-4ECC-9FA5-8040CB00F5A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisioReaderTest", "VisioReaderTest\VisioReaderTest.csproj", "{C3D9E2F6-3ECE-4B07-AC6D-BE6200DAC2AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationTest", "VisioReaderTest\CommunicationTest.csproj", "{C3D9E2F6-3ECE-4B07-AC6D-BE6200DAC2AE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{A8C89042-76CC-4A25-931E-150B7832218E}"
 EndProject

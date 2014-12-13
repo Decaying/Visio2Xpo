@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using cvo.buyshans.Visio2Xpo.Communication.Visio;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
