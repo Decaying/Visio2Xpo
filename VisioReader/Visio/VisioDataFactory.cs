@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using cvo.buyshans.Visio2Xpo.Data;
@@ -7,16 +8,23 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
 {
     public class VisioDataFactory : IVisioDataFactory
     {
-        private const string ShapeNameField = "Attribute";
+        private const string ShapeNameAttribute = "Attribute";
         private const string ShapeNamePrimaryKeyAttribute = "Primary Key Attribute";
-        private const string ShapeNameEntity = "Entity";
         private const string ShapeNameTable = "Entity";
+
+        private Int32 _MasterIdAttribute;
+        private Int32 _MasterIdTable;
+        private Int32 _MasterIdPrimaryKeyAttribute;
 
         private readonly IVisioReader _VisioReader;
 
         public VisioDataFactory(IVisioReader visioReader)
         {
             _VisioReader = visioReader;
+
+            _MasterIdAttribute = _VisioReader.GetMasterId(ShapeNameAttribute);
+            _MasterIdPrimaryKeyAttribute = _VisioReader.GetMasterId(ShapeNamePrimaryKeyAttribute);
+            _MasterIdTable = _VisioReader.GetMasterId(ShapeNameTable);
         }
 
         internal Field GetPrimaryKeyField(XElement element)
@@ -48,11 +56,8 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
 
         public IEnumerable<Table> ReadTables()
         {
-            var masterId = _VisioReader
-                .GetMasterId(ShapeNameTable);
-
             return _VisioReader
-                .GetElements(masterId)
+                .GetElements(_MasterIdTable)
                 .Select(CreateTable);
         }
 
@@ -72,27 +77,30 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
 
             relatedIDs.ToList().ForEach(i =>
             {
-                var pk = _VisioReader.GetElement(i);
-                if (pk != null)
-                {
-                    if (table.PrimaryKey == null)
-                    {
-                        table.PrimaryKey = new PrimaryKey
-                        {
-                            Name = "UniqueIdx"
-                        };
-                    }
+                var child = _VisioReader.GetElement(i);
+                if (child == null) return;
 
-                    primaryKeyFields.Add(GetPrimaryKeyField(pk));
-                }
-                var field = _VisioReader.GetElement(i);
-                if (field != null)
+                var masterId = _VisioReader.GetMasterId(child);
+                if (masterId == 0) return;
+
+                if (masterId == _MasterIdPrimaryKeyAttribute)
                 {
-                    fields.Add(GetField(field));
+                    primaryKeyFields.Add(GetPrimaryKeyField(child));
+                } 
+                else if (masterId == _MasterIdAttribute)
+                {
+                    fields.Add(GetField(child));
                 }
             });
 
-            table.PrimaryKey.Fields = primaryKeyFields;
+            if (primaryKeyFields.Count > 0)
+            {
+                table.PrimaryKey = new PrimaryKey
+                {
+                    Name = "UniqueIdx",
+                    Fields = primaryKeyFields
+                };
+            }
             table.Fields = fields;
             
             return table;
