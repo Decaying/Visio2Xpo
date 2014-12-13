@@ -8,12 +8,10 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Validators
     public class SchemaValidator : IValidator<Schema>
     {
         private readonly IList<String> _ValidationErrors;
-        private readonly IValidator<Table> _TableValidator; 
 
-        public SchemaValidator(IValidator<Table> tableValidator)
+        public SchemaValidator()
         {
             _ValidationErrors = new List<String>();
-            _TableValidator = tableValidator;
         }
 
         public bool Validate(Schema validate)
@@ -27,7 +25,7 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Validators
         {
             get
             {
-                return _ValidationErrors.Union(_TableValidator.ValidationErrors);
+                return _ValidationErrors;
             }
         }
     }

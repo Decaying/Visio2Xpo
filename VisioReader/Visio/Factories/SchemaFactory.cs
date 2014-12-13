@@ -12,7 +12,6 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Factories
         private readonly IValidator<Schema> _SchemaValidator;
         private readonly IFactory<Table> _TableFactory;
         private readonly IVisioReader _VisioReader;
-        private readonly IValidator<Table> _TableValidator;
 
         public SchemaFactory(IVisioReader visioReader)
         {
@@ -20,10 +19,9 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Factories
 
             _VisioReader = visioReader;
 
-            _TableValidator = new TableValidator();
             _SchemaValidator = new SchemaValidator();
 
-            _TableFactory = new TableFactory(visioReader, _TableValidator);
+            _TableFactory = new TableFactory(visioReader, new TableValidator());
         }
 
         public IValidator<Schema> Validator
@@ -40,16 +38,47 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Factories
         {
             var schema = new Schema
             {
-                Tables = ReadTables()
+                Tables = ReadTables().ToList()
             };
 
             return Validator.Validate(schema) ? schema : null;
+        }
+
+        public IEnumerable<IFactory> ChildFactories
+        {
+            get
+            {
+                return new List<IFactory> {_TableFactory};
+            }
+        }
+
+        public Boolean HasErrors()
+        {
+            var hasErrors = Validator.ValidationErrors.Any();
+
+            ChildFactories.ToList().ForEach(f =>
+                hasErrors = !hasErrors && f.HasErrors()
+            );
+
+            return hasErrors;
+        }
+
+        public IEnumerable<String> GetErrors()
+        {
+            var errors = new List<String>(Validator.ValidationErrors);
+
+            ChildFactories.ToList().ForEach(f =>
+                errors.AddRange(f.GetErrors())
+            );
+
+            return errors;
         }
 
         public IEnumerable<Table> ReadTables()
         {
             return _VisioReader
                 .GetElements(_TableFactory.MasterId)
+                .ToList()
                 .Select(element => _TableFactory.Create(element));
         }
     }

@@ -91,5 +91,36 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Factories
 
             return _Validator.Validate(table) ? table : null;
         }
+
+        public IEnumerable<IFactory> ChildFactories
+        {
+            get
+            {
+                return new List<IFactory> {_PrimaryKeyFactory, _FieldFactory};
+            }
+        }
+
+        public Boolean HasErrors()
+        {
+            var hasErrors = Validator.ValidationErrors.Any();
+
+            ChildFactories.ToList().ForEach(f =>
+            {
+                hasErrors = !hasErrors && f.HasErrors();
+            });
+
+            return hasErrors;
+        }
+
+        public IEnumerable<String> GetErrors()
+        {
+            var errors = new List<String>(Validator.ValidationErrors);
+
+            ChildFactories.ToList().ForEach(f =>
+                errors.AddRange(f.GetErrors())
+            );
+
+            return errors;
+        }
     }
 }

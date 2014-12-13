@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using cvo.buyshans.Visio2Xpo.Communication.Visio.Validators;
 using cvo.buyshans.Visio2Xpo.Data;
@@ -42,6 +44,24 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Factories
             };
 
             return Validator.Validate(primaryKey) ? primaryKey : null;
+        }
+
+        public IEnumerable<IFactory> ChildFactories
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public Boolean HasErrors()
+        {
+            return Validator.ValidationErrors.Any();
+        }
+
+        public IEnumerable<String> GetErrors()
+        {
+            return new List<String>(Validator.ValidationErrors);
         }
     }
 }
