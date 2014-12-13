@@ -59,6 +59,7 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
         {
             return _VisioReader
                 .GetElements(_MasterIdTable)
+                .Where(e => !String.IsNullOrWhiteSpace(_VisioReader.GetName(e)))
                 .Select(CreateTable);
         }
 
