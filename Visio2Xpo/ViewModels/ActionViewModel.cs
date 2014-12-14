@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Windows;
 using Caliburn.Micro;
 using cvo.buyshans.Visio2Xpo.UI.Messages;
+using DevExpress.Xpf.Core;
 
 namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
 {
@@ -70,6 +73,8 @@ namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
             MessageBox.Show("Loading....");
             CanSave = true;
             CanLoad = false;
+
+            _EventAggregator.PublishOnUIThreadAsync(new ThemeChanged("Office2013LightGray"));
         }
 
         public void Handle(SaveMessage message)
@@ -77,6 +82,7 @@ namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
             MessageBox.Show("Saving....");
             CanSave = false;
             CanLoad = true;
+            _EventAggregator.PublishOnUIThreadAsync(new ThemeChanged("Office2013DarkGray"));
         }
     }
 }

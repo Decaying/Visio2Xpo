@@ -9,6 +9,9 @@
                     <ui:Bootstrapper x:Key="Bootstrapper"/>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
+            <BitmapImage x:Key="SaveGlyph" UriSource="\Glyphs\save.png" />
+            <BitmapImage x:Key="LoadGlyph" UriSource="\Glyphs\load.png" />
+            <BitmapImage x:Key="ExitGlyph" UriSource="\Glyphs\exit.png" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

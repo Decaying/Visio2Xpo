@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Globalization;
 using System.IO;
 using System.IO.Packaging;
@@ -9,6 +10,7 @@ using System.Xml.Linq;
 
 namespace cvo.buyshans.Visio2Xpo.Communication.Visio
 {
+    [Export(typeof(IVisioReader))]
     public class VisioReader : IVisioReader
     {
         private const string XmlBaseUrl = "http://schemas.microsoft.com/visio/2010/relationships/";

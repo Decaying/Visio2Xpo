@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.Composition;
-using System.Reflection.Emit;
 using Caliburn.Micro;
 using cvo.buyshans.Visio2Xpo.UI.Messages;
 

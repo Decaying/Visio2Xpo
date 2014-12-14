@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Xml.Linq;
 using cvo.buyshans.Visio2Xpo.Communication.Visio.Validators;
@@ -7,6 +8,7 @@ using cvo.buyshans.Visio2Xpo.Data;
 
 namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Factories
 {
+    [Export(typeof(IFactory))]
     public class SchemaFactory : IFactory<Schema>
     {
         private readonly IValidator<Schema> _SchemaValidator;
