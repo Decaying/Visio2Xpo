@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestProjects", "TestProject
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicIO", "BasicIO\BasicIO.csproj", "{F4BB82A4-098E-4997-B9E0-73F2C9F0F9FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaliburnTutorial", "CaliburnTutorial\CaliburnTutorial.csproj", "{D0DA1349-B42B-4411-9391-F5B0EC54D6AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,11 +43,16 @@ Global
 		{F4BB82A4-098E-4997-B9E0-73F2C9F0F9FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4BB82A4-098E-4997-B9E0-73F2C9F0F9FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4BB82A4-098E-4997-B9E0-73F2C9F0F9FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0DA1349-B42B-4411-9391-F5B0EC54D6AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0DA1349-B42B-4411-9391-F5B0EC54D6AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0DA1349-B42B-4411-9391-F5B0EC54D6AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0DA1349-B42B-4411-9391-F5B0EC54D6AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F4BB82A4-098E-4997-B9E0-73F2C9F0F9FC} = {3399AFEF-7DAC-49E7-B124-EB2B8355F58A}
+		{D0DA1349-B42B-4411-9391-F5B0EC54D6AE} = {3399AFEF-7DAC-49E7-B124-EB2B8355F58A}
 	EndGlobalSection
 EndGlobal

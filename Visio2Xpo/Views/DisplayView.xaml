@@ -1,0 +1,7 @@
+﻿<UserControl x:Class="cvo.buyshans.Visio2Xpo.UI.Views.DisplayView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Label Content="{Binding LabelText}"/>
+    </Grid>
+</UserControl>
