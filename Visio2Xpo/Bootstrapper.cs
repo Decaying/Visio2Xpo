@@ -3,8 +3,12 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Windows;
+using System.Windows.Threading;
 using Caliburn.Micro;
+using cvo.buyshans.Visio2Xpo.UI.Messages;
 using cvo.buyshans.Visio2Xpo.UI.ViewModels;
+using DevExpress.Xpf.Core;
+using DevExpress.Xpf.WindowsUI;
 
 namespace cvo.buyshans.Visio2Xpo.UI
 {
@@ -37,6 +41,25 @@ namespace cvo.buyshans.Visio2Xpo.UI
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             DisplayRootViewFor<MainWindowViewModel>();
+            //IoC.Get<IEventAggregator>().PublishOnUIThread(new ThemeChanged("Office2013DarkGray"));
+        }
+
+        protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            var exception = e.Exception.InnerException;
+
+            while (exception.InnerException != null)
+            {
+                exception = exception.InnerException;
+            }
+
+            WinUIMessageBox.Show(
+               exception.Message,
+               "Something happened",
+               MessageBoxButton.OK,
+               MessageBoxImage.Error);
+
+            e.Handled = true;
         }
 
         protected override object GetInstance(Type service, string key)

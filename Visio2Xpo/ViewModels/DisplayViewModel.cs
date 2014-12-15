@@ -9,7 +9,6 @@ namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
     public class DisplayViewModel : PropertyChangedBase, IHandle<LoadMessage>, IHandle<SaveMessage>
     {
         private readonly IEventAggregator _EventAggregator;
-        private String _LabelText;
 
         [ImportingConstructor]
         public DisplayViewModel(IEventAggregator eventAggregator)
@@ -18,29 +17,13 @@ namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
             _EventAggregator.Subscribe(this);
         }
 
-        public String LabelText
-        {
-            get
-            {
-                return _LabelText;
-            }
-            set
-            {
-                if (_LabelText == value) return;
-                _LabelText = value;
-                NotifyOfPropertyChange();
-            }
-        }
-
         #region "Handles"
         public void Handle(LoadMessage message)
         {
-            LabelText = "Loaded!";
         }
 
         public void Handle(SaveMessage message)
         {
-            LabelText = "Saved!";
         }
         #endregion "Handles"
     }

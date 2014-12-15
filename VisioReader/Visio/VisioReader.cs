@@ -20,8 +20,8 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
         private const string XmlMasters = XmlBaseUrl + "masters";
         private const string XmlVisioCore = "http://schemas.microsoft.com/office/visio/2012/main";
 
-        private readonly FileMode _FileMode;
-        private readonly String _FileName;
+        private FileMode _FileMode;
+        private String _FileName;
 
         private IEnumerable<XElement> _Shapes;
         private IEnumerable<XElement> _Masters;
@@ -135,9 +135,8 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
                     Convert.ToInt32(m.Groups[1].Value)
                     );
         }
-        
-        #region Constructors
-        public VisioReader(String fileName, FileMode fileMode = FileMode.Open)
+        #region IVisioReader
+        public IVisioReader Initialize(String fileName, FileMode fileMode = FileMode.Open)
         {
             if (fileName == null) throw new ArgumentNullException("fileName");
             if (!File.Exists(fileName)) throw new FileNotFoundException(String.Format("File {0} does not exist", fileName), fileName);
@@ -145,9 +144,7 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
             _FileName = fileName;
             _FileMode = fileMode;
         }
-        #endregion Constructors
 
-        #region IVisioReader
         public IEnumerable<XElement> GetElements(Int32 masterId)
         {
             return Shapes.Where(e => 
