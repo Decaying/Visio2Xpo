@@ -143,6 +143,8 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
 
             _FileName = fileName;
             _FileMode = fileMode;
+
+            return this;
         }
 
         public IEnumerable<XElement> GetElements(Int32 masterId)

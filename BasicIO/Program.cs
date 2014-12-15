@@ -12,7 +12,7 @@ namespace BasicIO
     {
         private static void Main(string[] args)
         {
-            using (IVisioReader visioReader = new VisioReader("Drawing1.vsdx"))
+            using (IVisioReader visioReader = new VisioReader().Initialize("Drawing1.vsdx"))
             {
                 IFactory<Schema> schemaFactory = new SchemaFactory(visioReader);
                 var schema = schemaFactory.Create();

@@ -1,17 +1,21 @@
 ﻿<UserControl x:Class="cvo.buyshans.Visio2Xpo.UI.Views.DisplayView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid">
-    <dxg:TreeListControl>
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:selectors="clr-namespace:cvo.buyshans.Visio2Xpo.UI.Selectors">
+    <UserControl.Resources>
+        <selectors:EntitySelector x:Key="ChildSelector"/>
+    </UserControl.Resources>
+    <dxg:TreeListControl Name="SchemaViewModel">
         <dxg:TreeListControl.Columns>
             <dxg:TreeListColumn FieldName="AOTObject" AllowSorting="False"/>
             <dxg:TreeListColumn FieldName="AOTObjectType" AllowSorting="False" AllowEditing="True"/>
         </dxg:TreeListControl.Columns>
         <dxg:TreeListControl.View>
             <dxg:TreeListView 
-                FocusedRow="{Binding SelectedProjectEntity, Mode=TwoWay}" 
+                ChildNodesSelector="{StaticResource ChildSelector}"
                 TreeDerivationMode="ChildNodesSelector" 
-                ChildNodesPath="ChildNodes" 
+                ChildNodesPath="TableViewModel" 
                 ShowHorizontalLines="False"
                 ShowColumnHeaders="False"
                 ShowIndicator="False"

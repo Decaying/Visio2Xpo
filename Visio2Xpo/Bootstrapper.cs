@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 using Caliburn.Micro;
+using cvo.buyshans.Visio2Xpo.Communication.Visio;
 using cvo.buyshans.Visio2Xpo.UI.Messages;
 using cvo.buyshans.Visio2Xpo.UI.ViewModels;
 using DevExpress.Xpf.Core;
@@ -42,6 +45,14 @@ namespace cvo.buyshans.Visio2Xpo.UI
         {
             DisplayRootViewFor<MainWindowViewModel>();
             //IoC.Get<IEventAggregator>().PublishOnUIThread(new ThemeChanged("Office2013DarkGray"));
+        }
+        protected override IEnumerable<Assembly> SelectAssemblies()
+        {
+            var assemblies = base.SelectAssemblies().ToList();
+
+            assemblies.Add(typeof(VisioReader).GetTypeInfo().Assembly);
+
+            return assemblies;
         }
 
         protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

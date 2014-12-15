@@ -21,7 +21,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing1PrimaryKeyIsMasterId31()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing1))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing1))
             {
                 const Int32 expected = 31;
                 var actual = reader.GetMasterId(PrimaryKeyAttribute);
@@ -33,7 +33,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing2AttributeIsMasterId33()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing2))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing2))
             {
                 const Int32 expected = 33;
                 var actual = reader.GetMasterId(Attribute);
@@ -45,7 +45,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing3EntityIsMasterId30()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing3))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing3))
             {
                 const Int32 expected = 30;
                 var actual = reader.GetMasterId(Entity);
@@ -59,7 +59,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing1HasPrimaryKey()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing1))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing1))
             {
                 var masterId = reader.GetMasterId(PrimaryKeyAttribute);
 
@@ -72,7 +72,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing2HasAttribute()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing2))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing2))
             {
                 var masterId = reader.GetMasterId(Attribute);
 
@@ -85,7 +85,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing3HasEntity()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing3))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing3))
             {
                 var masterId = reader.GetMasterId(Entity);
 
@@ -100,7 +100,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing1HasNoAttributes()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing1))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing1))
             {
                 var masterId = reader.GetMasterId(Attribute);
 
@@ -113,7 +113,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing1HasNoEntities()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing1))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing1))
             {
                 var masterId = reader.GetMasterId(Entity);
 
@@ -128,7 +128,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing1HasPrimaryKeyName()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing1))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing1))
             {
                 var masterId = reader.GetMasterId(PrimaryKeyAttribute);
                 var element = reader.GetElements(masterId).First();
@@ -143,7 +143,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing2HasAttributeName()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing2))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing2))
             {
                 var masterId = reader.GetMasterId(Attribute);
                 var element = reader.GetElements(masterId).First();
@@ -158,7 +158,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing3HasEntityName()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing3))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing3))
             {
                 var masterId = reader.GetMasterId(Entity);
                 var element = reader.GetElements(masterId).First();
@@ -175,7 +175,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing4Has2Entities()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing4))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing4))
             {
                 var masterId = reader.GetMasterId(Entity);
                 var entities = reader.GetElements(masterId);
@@ -190,7 +190,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing4Entity1Has4ChildShapes()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing4))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing4))
             {
                 var masterId = reader.GetMasterId(Entity);
                 var entity = reader.GetElements(masterId).First();
@@ -205,7 +205,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing4Entity2Has5ChildShapes()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing4))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing4))
             {
                 var masterId = reader.GetMasterId(Entity);
                 var entity = reader.GetElements(masterId).Skip(1).First();
@@ -220,7 +220,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing4Entity1Has3NamedChildShapes()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing4))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing4))
             {
                 var masterId = reader.GetMasterId(Entity);
                 var entity = reader.GetElements(masterId).First();
@@ -248,7 +248,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing4Entity2Has4NamedChildShapes()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing4))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing4))
             {
                 var masterId = reader.GetMasterId(Entity);
                 var entity = reader.GetElements(masterId).Skip(1).First();
@@ -280,7 +280,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         [TestMethod]
         public void Drawing4Entity1Has1PrimaryKeyField()
         {
-            using (IVisioReader reader = new VisioReader(FileDrawing4))
+            using (IVisioReader reader = new VisioReader().Initialize(FileDrawing4))
             {
                 var masterId = reader.GetMasterId(Entity);
                 var entity = reader.GetElements(masterId).First();
