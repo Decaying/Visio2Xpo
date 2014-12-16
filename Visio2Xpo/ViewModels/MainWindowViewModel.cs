@@ -1,9 +1,5 @@
-﻿using System;
-using System.ComponentModel.Composition;
-using System.Windows;
+﻿using System.ComponentModel.Composition;
 using Caliburn.Micro;
-using cvo.buyshans.Visio2Xpo.UI.Messages;
-using DevExpress.Xpf.Core;
 
 namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
 {

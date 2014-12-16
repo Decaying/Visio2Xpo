@@ -83,6 +83,7 @@
     <Compile Include="Selectors\EntitySelector.cs" />
     <Compile Include="ViewModels\ActionViewModel.cs" />
     <Compile Include="ViewModels\DisplayViewModel.cs" />
+    <Compile Include="ViewModels\FieldViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\SchemaViewModel.cs" />
     <Compile Include="ViewModels\TableViewModel.cs" />

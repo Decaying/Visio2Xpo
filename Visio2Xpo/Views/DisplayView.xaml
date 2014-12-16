@@ -6,7 +6,7 @@
     <UserControl.Resources>
         <selectors:EntitySelector x:Key="ChildSelector"/>
     </UserControl.Resources>
-    <dxg:TreeListControl Name="SchemaViewModel">
+    <dxg:TreeListControl Name="Entities" ItemsSource="{Binding Entities}">
         <dxg:TreeListControl.Columns>
             <dxg:TreeListColumn FieldName="AOTObject" AllowSorting="False"/>
             <dxg:TreeListColumn FieldName="AOTObjectType" AllowSorting="False" AllowEditing="True"/>
@@ -15,7 +15,6 @@
             <dxg:TreeListView 
                 ChildNodesSelector="{StaticResource ChildSelector}"
                 TreeDerivationMode="ChildNodesSelector" 
-                ChildNodesPath="TableViewModel" 
                 ShowHorizontalLines="False"
                 ShowColumnHeaders="False"
                 ShowIndicator="False"

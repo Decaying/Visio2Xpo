@@ -7,7 +7,7 @@ using cvo.buyshans.Visio2Xpo.Data;
 
 namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
 {
-    public class SchemaViewModel : PropertyChangedBase
+    public class SchemaViewModel : Conductor<PropertyChangedBase>
     {
         private Schema _Schema;
         public Schema Schema
@@ -39,20 +39,39 @@ namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
             }
         }
 
-        public ObservableCollection<TableViewModel> TableViewModel;
+        private String _AOTObjectType;
+
+        public String AOTObjectType
+        {
+            get
+            {
+                return _AOTObjectType;
+            }
+            set
+            {
+                if (_AOTObjectType == value) return;
+                _AOTObjectType = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public ObservableCollection<TableViewModel> Tables { get; private set; }
 
         public SchemaViewModel(Schema schema)
         {
+            Tables = new ObservableCollection<TableViewModel>();
             Schema = schema;
+
             AOTObject = "AOT";
-            TableViewModel = new ObservableCollection<TableViewModel>();
+            AOTObjectType = "AOT";
+
             LoadTables(schema.Tables);
         }
 
         private void LoadTables(IEnumerable<Table> tables)
         {
-            TableViewModel.Clear();
-            tables.ToList().ForEach(t => TableViewModel.Add(new TableViewModel(t)));
+            Tables.Clear();
+            tables.ToList().ForEach(t => Tables.Add(new TableViewModel(t)));
         }
     }
 }

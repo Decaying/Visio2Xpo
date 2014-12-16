@@ -8,19 +8,25 @@ using cvo.buyshans.Visio2Xpo.UI.Messages;
 namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
 {
     [Export]
-    public class DisplayViewModel : PropertyChangedBase, IHandle<SchemaChanged>
+    public class DisplayViewModel : Conductor<PropertyChangedBase>, IHandle<SchemaChanged>
     {
         private readonly IEventAggregator _EventAggregator;
 
-        public ObservableCollection<SchemaViewModel> SchemaViewModel { get; private set; }
+        public ObservableCollection<SchemaViewModel> Entities { get; private set; }
 
         [ImportingConstructor]
         public DisplayViewModel(IEventAggregator eventAggregator)
         {
-            SchemaViewModel = new ObservableCollection<SchemaViewModel>();
+            Entities = new ObservableCollection<SchemaViewModel>();
 
             _EventAggregator = eventAggregator;
             _EventAggregator.Subscribe(this);
+        }
+
+        private void LoadSchema(Schema schema)
+        {
+            Entities.Clear();
+            Entities.Add(new SchemaViewModel(schema));
         }
 
         #region "Handles"
@@ -28,13 +34,6 @@ namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
         {
             LoadSchema(message.Schema);
         }
-
-        private void LoadSchema(Schema schema)
-        {
-            SchemaViewModel.Clear();
-            SchemaViewModel.Add(new SchemaViewModel(schema));
-        }
-
         #endregion "Handles"
     }
 }
