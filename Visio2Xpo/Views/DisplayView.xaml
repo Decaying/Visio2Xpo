@@ -8,7 +8,7 @@
     </UserControl.Resources>
     <dxg:TreeListControl Name="Entities" ItemsSource="{Binding Entities}">
         <dxg:TreeListControl.Columns>
-            <dxg:TreeListColumn FieldName="AOTObject" AllowSorting="False"/>
+            <dxg:TreeListColumn FieldName="AOTObject" AllowSorting="False" AllowEditing="False"/>
             <dxg:TreeListColumn FieldName="AOTObjectType" AllowSorting="False" AllowEditing="True"/>
         </dxg:TreeListControl.Columns>
         <dxg:TreeListControl.View>
@@ -19,7 +19,6 @@
                 ShowColumnHeaders="False"
                 ShowIndicator="False"
                 ShowVerticalLines="False"
-                AllowEditing="False"
                 NavigationStyle="Row"
                 AutoWidth="True"/>
         </dxg:TreeListControl.View>

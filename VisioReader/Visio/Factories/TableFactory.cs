@@ -85,6 +85,7 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio.Factories
             if (primaryKey != null)
             {
                 primaryKey.Fields = primaryKeyFields;
+                table.PrimaryKey = primaryKey;
             }
 
             table.Fields = fields;

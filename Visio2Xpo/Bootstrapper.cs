@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 using Caliburn.Micro;
+using cvo.buyshans.Visio2Xpo.Communication.DynamicsAX;
 using cvo.buyshans.Visio2Xpo.Communication.Visio;
 using cvo.buyshans.Visio2Xpo.UI.Messages;
 using cvo.buyshans.Visio2Xpo.UI.ViewModels;
@@ -51,6 +52,7 @@ namespace cvo.buyshans.Visio2Xpo.UI
             var assemblies = base.SelectAssemblies().ToList();
 
             assemblies.Add(typeof(VisioReader).GetTypeInfo().Assembly);
+            assemblies.Add(typeof(XpoFormatter).GetTypeInfo().Assembly);
 
             return assemblies;
         }

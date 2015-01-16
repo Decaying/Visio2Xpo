@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -7,6 +8,7 @@ using cvo.buyshans.Visio2Xpo.Data;
 
 namespace cvo.buyshans.Visio2Xpo.Communication.DynamicsAX
 {
+    [Export(typeof(IFormatter))]
     public class XpoFormatter : IFormatter
     {
         public object Deserialize(Stream serializationStream)
@@ -34,6 +36,7 @@ namespace cvo.buyshans.Visio2Xpo.Communication.DynamicsAX
                 objs.OfType<IEnumerable<Table>>().ToList().ForEach(o => SerializeTables(sw, o));
 
                 sw.WriteLine("***Element: END");
+
                 sw.Flush();
                 sw.Close();
             }
@@ -48,26 +51,42 @@ namespace cvo.buyshans.Visio2Xpo.Communication.DynamicsAX
             tables.ToList().ForEach(t =>
             {
                 sw.WriteLine("");
-                sw.WriteLine("*** ELEMENT: DBT");
+                sw.WriteLine("***Element: DBT");
                 sw.WriteLine("");
                 sw.WriteLine("; Microsoft Dynamics AX Table : {0} unloaded", t.Name);
                 sw.WriteLine("; --------------------------------------------------------------------------------");
                 sw.WriteLine("  TABLEVERSION 1");
+                sw.WriteLine("");
                 sw.WriteLine("  TABLE #{0}", t.Name);
                 sw.WriteLine("    EnforceFKRelation 1");
-                sw.WriteLine();
                 sw.WriteLine("    PROPERTIES");
                 sw.WriteLine("      Name                #{0}", t.Name);
                 sw.WriteLine("      CreateRecIdIndex    #Yes");
-                sw.WriteLine("      PrimaryIndex        #SurrogateKey");
-                sw.WriteLine("      ClusterIndex        #SurrogateKey");
+
+                if (t.PrimaryKey != null)
+                {
+                    sw.WriteLine("      PrimaryIndex        #{0}", t.PrimaryKey.Name);
+                    sw.WriteLine("      ClusterIndex        #{0}", t.PrimaryKey.Name);
+                }
+                else
+                {
+                    sw.WriteLine("      PrimaryIndex        #SurrogateKey");
+                    sw.WriteLine("      ClusterIndex        #SurrogateKey");
+                }
+
                 sw.WriteLine("      Origin              #{0}", Guid.NewGuid().ToString("B"));
                 sw.WriteLine("    ENDPROPERTIES");
                 sw.WriteLine();
                 sw.WriteLine("    FIELDS");
 
-                SerializeFields(sw, t.PrimaryKey.Fields);
-                SerializeFields(sw, t.Fields);
+                if (t.PrimaryKey != null)
+                {
+                    SerializeFields(sw, t, t.PrimaryKey.Fields);
+                }
+                if (t.Fields != null)
+                {
+                    SerializeFields(sw, t, t.Fields);
+                }
 
                 sw.WriteLine("    ENDFIELDS");
                 sw.WriteLine("    GROUPS");
@@ -75,7 +94,10 @@ namespace cvo.buyshans.Visio2Xpo.Communication.DynamicsAX
                 sw.WriteLine("    ENDGROUPS");
                 sw.WriteLine("    INDICES");
 
-                SerializePrimaryKeyIndex(sw, t.PrimaryKey);
+                if (t.PrimaryKey != null)
+                {
+                    SerializePrimaryKeyIndex(sw, t.PrimaryKey);
+                }
 
                 sw.WriteLine("    ENDINDICES");
                 sw.WriteLine("    FULLTEXTINDICES");
@@ -93,7 +115,7 @@ namespace cvo.buyshans.Visio2Xpo.Communication.DynamicsAX
             });
         }
 
-        private static void SerializeFields(TextWriter sw, IEnumerable<Field> fields)
+        private static void SerializeFields(TextWriter sw, Table table, IEnumerable<Field> fields)
         {
             if (fields == null) return;
 
@@ -103,7 +125,7 @@ namespace cvo.buyshans.Visio2Xpo.Communication.DynamicsAX
                 sw.WriteLine("        {0}", f.BaseType.ToUpper());
                 sw.WriteLine("        PROPERTIES");
                 sw.WriteLine("          Name                #{0}", f.Name);
-                sw.WriteLine("          Table               #DummyTable");
+                sw.WriteLine("          Table               #{0}", table.Name);
                 sw.WriteLine("          Origin              #{0}", Guid.NewGuid().ToString("B"));
                 sw.WriteLine("        ENDPROPERTIES");
                 sw.WriteLine();

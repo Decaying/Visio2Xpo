@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
-using System.Windows;
 using Caliburn.Micro;
 using cvo.buyshans.Visio2Xpo.Communication.Visio;
 using cvo.buyshans.Visio2Xpo.Communication.Visio.Factories;
@@ -12,8 +11,6 @@ using cvo.buyshans.Visio2Xpo.Data;
 using cvo.buyshans.Visio2Xpo.UI.Messages;
 using DevExpress.Mvvm;
 using DevExpress.Mvvm.UI;
-using DevExpress.Xpf.Core;
-using DevExpress.Xpf.Editors.Helpers;
 
 namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
 {
@@ -22,15 +19,19 @@ namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
     {
         private Boolean _CanSave;
         private Boolean _CanLoad = true;
+
+        private Schema _Schema;
         
         private readonly IEventAggregator _EventAggregator;
-        private readonly IOpenFileDialogService _OpenFileDialogService;
+        private readonly IOpenFileDialogService _VisioOpenFileDialogService;
+        private readonly ISaveFileDialogService _XPOOpenFileDialogService;
 
         [ImportingConstructor]
         public ActionViewModel(IEventAggregator eventAggregator)
         {
             _EventAggregator = eventAggregator;
-            _OpenFileDialogService = new OpenFileDialogService {Filter = "Visio files (.vsdx)|*.vsdx"};
+            _VisioOpenFileDialogService = new OpenFileDialogService { Filter = "Visio files (.vsdx)|*.vsdx" };
+            _XPOOpenFileDialogService = new SaveFileDialogService { Filter = "XPO files (.xpo)|*.xpo" };
 
             _EventAggregator.Subscribe(this);
         }
@@ -69,26 +70,26 @@ namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
         #region "UI Actions"
         public void Save()
         {
-            _EventAggregator.PublishOnUIThread(new SaveMessage());
+            _EventAggregator.PublishOnUIThreadAsync(new SaveMessage(_Schema));
         }
 
         public void Load()
         {
-            _EventAggregator.PublishOnUIThread(new LoadMessage());
+            _EventAggregator.PublishOnUIThreadAsync(new LoadMessage());
         }
         #endregion "UI Actions"
 
         public void Handle(LoadMessage message)
         {
-
-            if (_OpenFileDialogService.ShowDialog())
+            if (_VisioOpenFileDialogService.ShowDialog())
             {
-                var file = _OpenFileDialogService.Files.First();
+                var file = _VisioOpenFileDialogService.Files.First();
                 var resultFileName = file.DirectoryName + "\\" + file.Name;
                 
                 using (var reader = IoC.Get<IVisioReader>().Initialize(resultFileName))
                 {
                     ReadVisioSchema(reader);
+                    CanSave = true;
                 }
             }
         }
@@ -110,11 +111,21 @@ namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
                 throw new Exception(sb.ToString());
             }
 
+            _Schema = schema;
             _EventAggregator.PublishOnUIThreadAsync(new SchemaChanged(schema));
         }
 
         public void Handle(SaveMessage message)
         {
+            if (_XPOOpenFileDialogService.ShowDialog())
+            {
+                var file = _XPOOpenFileDialogService.File;
+                var resultFileName = file.DirectoryName + "\\" + file.Name;
+
+                IoC.Get<IFormatter>()
+                    .Serialize(new FileStream(resultFileName, FileMode.Create),
+                               message.Schema);
+            }
         }
     }
 }

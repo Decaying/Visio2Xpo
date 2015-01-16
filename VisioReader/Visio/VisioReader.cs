@@ -7,6 +7,7 @@ using System.IO.Packaging;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using cvo.buyshans.Visio2Xpo.Communication.Util;
 
 namespace cvo.buyshans.Visio2Xpo.Communication.Visio
 {
@@ -125,6 +126,11 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
 
         private IEnumerable<Int32> GetIDsFromRelationshipsFormula(String formula)
         {
+            formula = formula.FindInFormula("DEPENDSON");
+
+            if (String.IsNullOrWhiteSpace(formula))
+                return null;
+
             const String pattern = "Sheet.(\\d{1,})";
             var results = Regex.Matches(formula, pattern);
 
@@ -167,7 +173,12 @@ namespace cvo.buyshans.Visio2Xpo.Communication.Visio
                 .Where(xe => xe.Attribute("N") != null && xe.Attribute("N").Value == "Relationships")
                 .ToList()
                 .ForEach(
-                    xe => relatedElementIDs.AddRange(GetIDsFromRelationshipsFormula(xe.Attribute("F").Value))
+                    xe =>
+                    {
+                        var ids = GetIDsFromRelationshipsFormula(xe.Attribute("F").Value);
+                        if (ids != null)
+                            relatedElementIDs.AddRange(ids);
+                    }
                 );
 
             return relatedElementIDs;

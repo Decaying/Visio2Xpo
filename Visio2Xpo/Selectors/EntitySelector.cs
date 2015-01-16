@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using cvo.buyshans.Visio2Xpo.Data;
 using cvo.buyshans.Visio2Xpo.UI.ViewModels;
 using DevExpress.Xpf.Grid;
 
