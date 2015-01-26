@@ -26,7 +26,10 @@ namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
         private void LoadSchema(Schema schema)
         {
             Entities.Clear();
-            Entities.Add(new SchemaViewModel(schema));
+            if (schema != null)
+            {
+                Entities.Add(new SchemaViewModel(schema));
+            }
         }
 
         #region "Handles"

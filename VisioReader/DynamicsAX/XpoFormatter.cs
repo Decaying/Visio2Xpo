@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using cvo.buyshans.Visio2Xpo.Data;
 
 namespace cvo.buyshans.Visio2Xpo.Communication.DynamicsAX
@@ -16,7 +17,7 @@ namespace cvo.buyshans.Visio2Xpo.Communication.DynamicsAX
             throw new NotImplementedException();
         }
 
-        public void Serialize(Stream serializationStream, object graph)
+        public async void Serialize(Stream serializationStream, object graph)
         {
             if (serializationStream == null) throw new ArgumentNullException("serializationStream");
             if (graph == null) throw new ArgumentNullException("graph");
@@ -27,18 +28,19 @@ namespace cvo.buyshans.Visio2Xpo.Communication.DynamicsAX
             // Get fields data.
             var objs = FormatterServices.GetObjectData(graph, members);
 
+            var sb = new StringBuilder();
+
+            sb.AppendLine("Exportfile for AOT version 1.0 or later");
+            sb.AppendLine("Formatversion: 1");
+
+            objs.OfType<IEnumerable<Table>>().ToList().ForEach(o => SerializeTables(sb, o));
+
+            sb.AppendLine("***Element: END");
+
             // Write class name and all fields & values to file
             using (var sw = new StreamWriter(serializationStream))
             {
-                sw.WriteLine("Exportfile for AOT version 1.0 or later");
-                sw.WriteLine("Formatversion: 1");
-
-                objs.OfType<IEnumerable<Table>>().ToList().ForEach(o => SerializeTables(sw, o));
-
-                sw.WriteLine("***Element: END");
-
-                sw.Flush();
-                sw.Close();
+                await sw.WriteAsync(sb.ToString());
             }
         }
 
@@ -46,106 +48,107 @@ namespace cvo.buyshans.Visio2Xpo.Communication.DynamicsAX
         public SerializationBinder Binder { get; set; }
         public StreamingContext Context { get; set; }
 
-        private static void SerializeTables(TextWriter sw, IEnumerable<Table> tables)
+        private static void SerializeTables(StringBuilder sb, IEnumerable<Table> tables)
         {
             tables.ToList().ForEach(t =>
             {
-                sw.WriteLine("");
-                sw.WriteLine("***Element: DBT");
-                sw.WriteLine("");
-                sw.WriteLine("; Microsoft Dynamics AX Table : {0} unloaded", t.Name);
-                sw.WriteLine("; --------------------------------------------------------------------------------");
-                sw.WriteLine("  TABLEVERSION 1");
-                sw.WriteLine("");
-                sw.WriteLine("  TABLE #{0}", t.Name);
-                sw.WriteLine("    EnforceFKRelation 1");
-                sw.WriteLine("    PROPERTIES");
-                sw.WriteLine("      Name                #{0}", t.Name);
-                sw.WriteLine("      CreateRecIdIndex    #Yes");
+                sb.AppendLine("");
+                sb.AppendLine("***Element: DBT");
+                sb.AppendLine("");
+                sb.AppendLine(String.Format("; Microsoft Dynamics AX Table : {0} unloaded", t.Name));
+                sb.AppendLine("; --------------------------------------------------------------------------------");
+                sb.AppendLine("  TABLEVERSION 1");
+                sb.AppendLine("");
+                sb.AppendLine(String.Format("  TABLE #{0}", t.Name));
+                sb.AppendLine("    EnforceFKRelation 1");
+                sb.AppendLine("    PROPERTIES");
+                sb.AppendLine(String.Format("      Name                #{0}", t.Name));
+                sb.AppendLine("      CreateRecIdIndex    #Yes");
 
                 if (t.PrimaryKey != null)
                 {
-                    sw.WriteLine("      PrimaryIndex        #{0}", t.PrimaryKey.Name);
-                    sw.WriteLine("      ClusterIndex        #{0}", t.PrimaryKey.Name);
+                    sb.AppendLine(String.Format("      PrimaryIndex        #{0}", t.PrimaryKey.Name));
+                    sb.AppendLine(String.Format("      ClusterIndex        #{0}", t.PrimaryKey.Name));
                 }
                 else
                 {
-                    sw.WriteLine("      PrimaryIndex        #SurrogateKey");
-                    sw.WriteLine("      ClusterIndex        #SurrogateKey");
+                    sb.AppendLine("      PrimaryIndex        #SurrogateKey");
+                    sb.AppendLine("      ClusterIndex        #SurrogateKey");
                 }
 
-                sw.WriteLine("      Origin              #{0}", Guid.NewGuid().ToString("B"));
-                sw.WriteLine("    ENDPROPERTIES");
-                sw.WriteLine();
-                sw.WriteLine("    FIELDS");
+                sb.AppendLine(String.Format("      Origin              #{0}", Guid.NewGuid().ToString("B")));
+                sb.AppendLine("    ENDPROPERTIES");
+                sb.AppendLine();
+                sb.AppendLine("    FIELDS");
 
                 if (t.PrimaryKey != null)
                 {
-                    SerializeFields(sw, t, t.PrimaryKey.Fields);
+                    SerializeFields(sb, t, t.PrimaryKey.Fields);
                 }
                 if (t.Fields != null)
                 {
-                    SerializeFields(sw, t, t.Fields);
+                    SerializeFields(sb, t, t.Fields);
                 }
 
-                sw.WriteLine("    ENDFIELDS");
-                sw.WriteLine("    GROUPS");
+                sb.AppendLine("    ENDFIELDS");
+                sb.AppendLine("    GROUPS");
 
-                sw.WriteLine("    ENDGROUPS");
-                sw.WriteLine("    INDICES");
+                sb.AppendLine("    ENDGROUPS");
+                sb.AppendLine("    INDICES");
 
                 if (t.PrimaryKey != null)
                 {
-                    SerializePrimaryKeyIndex(sw, t.PrimaryKey);
+                    SerializePrimaryKeyIndex(sb, t.PrimaryKey);
                 }
 
-                sw.WriteLine("    ENDINDICES");
-                sw.WriteLine("    FULLTEXTINDICES");
-                sw.WriteLine("    ENDFULLTEXTINDICES");
-                sw.WriteLine("    REFERENCES");
-                sw.WriteLine("    ENDREFERENCES");
-                sw.WriteLine();
-                sw.WriteLine("    DELETEACTIONS");
-                sw.WriteLine("    ENDDELETEACTIONS");
-                sw.WriteLine();
-                sw.WriteLine("    METHODS");
-                sw.WriteLine("    ENDMETHODS");
-                sw.WriteLine("  ENDTABLE");
-                sw.WriteLine();
+                sb.AppendLine("    ENDINDICES");
+                sb.AppendLine("    FULLTEXTINDICES");
+                sb.AppendLine("    ENDFULLTEXTINDICES");
+                sb.AppendLine("    REFERENCES");
+                sb.AppendLine("    ENDREFERENCES");
+                sb.AppendLine();
+                sb.AppendLine("    DELETEACTIONS");
+                sb.AppendLine("    ENDDELETEACTIONS");
+                sb.AppendLine();
+                sb.AppendLine("    METHODS");
+                sb.AppendLine("    ENDMETHODS");
+                sb.AppendLine("  ENDTABLE");
+                sb.AppendLine();
             });
         }
 
-        private static void SerializeFields(TextWriter sw, Table table, IEnumerable<Field> fields)
+        private static void SerializeFields(StringBuilder sb, Table table, IEnumerable<Field> fields)
         {
             if (fields == null) return;
 
             fields.ToList().ForEach(f =>
             {
-                sw.WriteLine("      FIELD #{0}", f.Name);
-                sw.WriteLine("        {0}", f.BaseType.ToUpper());
-                sw.WriteLine("        PROPERTIES");
-                sw.WriteLine("          Name                #{0}", f.Name);
-                sw.WriteLine("          Table               #{0}", table.Name);
-                sw.WriteLine("          Origin              #{0}", Guid.NewGuid().ToString("B"));
-                sw.WriteLine("        ENDPROPERTIES");
-                sw.WriteLine();
+                sb.AppendLine(String.Format("      FIELD #{0}", f.Name));
+                sb.AppendLine(String.Format("        {0}", f.BaseType.ToUpper()));
+                sb.AppendLine("        PROPERTIES");
+                sb.AppendLine(String.Format("          Name                #{0}", f.Name));
+                sb.AppendLine(String.Format("          Table               #{0}", table.Name));
+                sb.AppendLine(String.Format("          Origin              #{0}", Guid.NewGuid().ToString("B")));
+                sb.AppendLine("        ENDPROPERTIES");
+                sb.AppendLine();
             });
         }
 
-        private static void SerializePrimaryKeyIndex(TextWriter sw, PrimaryKey primaryKey)
+        private static void SerializePrimaryKeyIndex(StringBuilder sb, PrimaryKey primaryKey)
         {
-            sw.WriteLine("      #{0}", primaryKey.Name);
-            sw.WriteLine("      PROPERTIES");
-            sw.WriteLine("        Name                #{0}", primaryKey.Name);
-            sw.WriteLine("        Origin              #{0}", Guid.NewGuid().ToString("B"));
-            sw.WriteLine("        PROPERTIES");
-            sw.WriteLine("      ENDPROPERTIES");
-            sw.WriteLine();
-            sw.WriteLine("      INDEXFIELDS");
+            sb.AppendLine(String.Format("      #{0}", primaryKey.Name));
+            sb.AppendLine("      PROPERTIES");
+            sb.AppendLine(String.Format("        Name                #{0}", primaryKey.Name));
+            sb.AppendLine("        AllowDuplicates     #No");
+            sb.AppendLine("        AlternateKey        #Yes");
+            sb.AppendLine(String.Format("        Origin              #{0}", Guid.NewGuid().ToString("B")));
+            sb.AppendLine("      ENDPROPERTIES");
+            sb.AppendLine();
+            sb.AppendLine("      INDEXFIELDS");
             primaryKey.Fields.ToList().ForEach(f =>
-                sw.WriteLine("        #{0}", f.Name)
+                sb.AppendLine(String.Format("        #{0}", f.Name))
                 );
-            sw.WriteLine("      ENDINDEXFIELDS");
+            sb.AppendLine("      ENDINDEXFIELDS");
         }
     }
 }
