@@ -9,7 +9,22 @@ namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
 {
     public class TableViewModel : Conductor<PropertyChangedBase>
     {
-        public ObservableCollection<FieldViewModel> Fields { get; private set; } 
+        public ObservableCollection<FieldViewModel> Fields { get; private set; }
+
+        private Boolean _Expanded = true;
+        public Boolean Expanded
+        {
+            get
+            {
+                return _Expanded;
+            }
+            set
+            {
+                if (_Expanded == value) return;
+                _Expanded = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
         private Table _Table;
         public Table Table

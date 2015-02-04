@@ -46,7 +46,7 @@ namespace cvo.buyshans.Visio2Xpo.VisioReaderTest
         }
 
         [TestMethod]
-        public void NameSpecialCharacters()
+        public void NameCannotContainSpecialCharacters()
         {
             const Boolean expected = false;
 

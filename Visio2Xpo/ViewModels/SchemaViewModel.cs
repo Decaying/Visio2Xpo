@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Media.Animation;
 using Caliburn.Micro;
 using cvo.buyshans.Visio2Xpo.Data;
 
@@ -9,6 +10,21 @@ namespace cvo.buyshans.Visio2Xpo.UI.ViewModels
 {
     public class SchemaViewModel : Conductor<PropertyChangedBase>
     {
+        private Boolean _Expanded = true;
+        public Boolean Expanded
+        {
+            get
+            {
+                return _Expanded;
+            }
+            set
+            {
+                if (_Expanded == value) return;
+                _Expanded = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         private Schema _Schema;
         public Schema Schema
         {

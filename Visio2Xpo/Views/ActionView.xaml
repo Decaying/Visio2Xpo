@@ -4,8 +4,8 @@
              xmlns:dxwui="http://schemas.devexpress.com/winfx/2008/xaml/windowsui">
     <Grid>
         <dxwui:AppBar Visibility="Visible" IsSticky="True">
-            <dxwui:AppBarButton Name="Save" Label="Save" Glyph="{StaticResource SaveGlyph}" GlyphHeight="16" AllowGlyphTheming="True" />
             <dxwui:AppBarButton Name="Load" Label="Load" Glyph="{StaticResource LoadGlyph}" GlyphHeight="16" AllowGlyphTheming="True" />
+            <dxwui:AppBarButton Name="Save" Label="Save" Glyph="{StaticResource SaveGlyph}" GlyphHeight="16" AllowGlyphTheming="True" />
             <dxwui:AppBarExitButton Name="Exit" Label="Exit" Glyph="{StaticResource ExitGlyph}" GlyphHeight="16" AllowGlyphTheming="True" HorizontalAlignment="Right"/>
         </dxwui:AppBar>
     </Grid>

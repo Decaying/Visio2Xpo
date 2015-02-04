@@ -14,6 +14,7 @@
         <dxg:TreeListControl.View>
             <dxg:TreeListView 
                 ChildNodesSelector="{StaticResource ChildSelector}"
+                ExpandStateBinding="{Binding Expanded}"
                 TreeDerivationMode="ChildNodesSelector" 
                 ShowHorizontalLines="False"
                 ShowColumnHeaders="False"
